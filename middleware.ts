@@ -30,5 +30,3 @@ export const config = {
 		"/((?!api|_next|.*\\.(?:ico|png|jpg|jpeg|svg|css|js|woff|woff2|ttf|map|json|txt)).*)",
 	],
 };
-
-  // "dev": "next dev --turbopack"

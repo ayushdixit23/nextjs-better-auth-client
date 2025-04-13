@@ -1,12 +1,23 @@
 import { betterAuth } from "better-auth";
 import { MongoClient } from "mongodb";
 import { mongodbAdapter } from "better-auth/adapters/mongodb";
- 
+
 const client = new MongoClient(process.env.MONGODB_URI as string);
-const db = client.db(); 
+const db = client.db();
 
 const auth = betterAuth({
     database: mongodbAdapter(db),
+    user: {
+        additionalFields: {
+            username: {
+                type: "string",
+                required: true,
+                unique: true,
+                minLength: 3,
+                maxLength: 32
+            },
+        }
+    },
     secret: process.env.BETTER_AUTH_SECRET as string,
     emailAndPassword: {
         enabled: true,
