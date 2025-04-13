@@ -24,7 +24,6 @@ export async function middleware(request: NextRequest) {
   return NextResponse.next();
 }
 
-
 export const config = {
 	matcher: [
 		"/((?!api|_next|.*\\.(?:ico|png|jpg|jpeg|svg|css|js|woff|woff2|ttf|map|json|txt)).*)",
