@@ -1,24 +1,34 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSessionCookie } from "better-auth/cookies";
-
-const routesThatCantBeAccessedWithLogin = ["/login", "/signup"];
+import {
+  DEFAULT_REDIRECT_PATH,
+  DEFAULT_RESTRICTED_REDIRECT_PATH,
+  RESTRICTED_PATHS,
+} from "./app/utils/constants";
 
 export async function middleware(request: NextRequest) {
-	const sessionCookie = getSessionCookie(request);
+  const { pathname } = request.nextUrl;
+  const sessionCookie = getSessionCookie(request);
 
-	if (!sessionCookie) {
-		return NextResponse.redirect(new URL("/login", request.url));
-	}
+  // 🧠 If already on a restricted path like /login or /signup and not logged in, allow access
+  if (RESTRICTED_PATHS.includes(pathname)) {
+    if (!sessionCookie) return NextResponse.next(); // allow access
+    return NextResponse.redirect(new URL(DEFAULT_REDIRECT_PATH, request.url)); // already logged in
+  }
 
-	if (sessionCookie && routesThatCantBeAccessedWithLogin.includes(request.nextUrl.pathname)) {
-		return NextResponse.redirect(new URL("/", request.url));
-	}
+  // 🧠 For all other paths, redirect to login if not authenticated
+  if (!sessionCookie) {
+    return NextResponse.redirect(new URL(DEFAULT_RESTRICTED_REDIRECT_PATH, request.url));
+  }
 
-	return NextResponse.next();
+  return NextResponse.next();
 }
+
 
 export const config = {
 	matcher: [
 		"/((?!api|_next|.*\\.(?:ico|png|jpg|jpeg|svg|css|js|woff|woff2|ttf|map|json|txt)).*)",
 	],
 };
+
+  // "dev": "next dev --turbopack"
