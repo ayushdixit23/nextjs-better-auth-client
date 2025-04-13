@@ -9,7 +9,8 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { FaLock } from 'react-icons/fa'
 import { z } from 'zod'
-
+import { signIn } from '@/auth-client'
+import { toast } from 'react-toastify'
 const loginSchema = z.object({
     email: z.string().email({ message: "Invalid email address" }),
     password: z.string().min(6, { message: "Password must be at least 6 characters" }),
@@ -22,15 +23,27 @@ const LoginForm = () => {
     const form = useForm<LoginFormValues>({
         resolver: zodResolver(loginSchema),
         defaultValues: {
-            email: "",
-            password: "",
+            email: "fsayush100@gmail.com",
+            password: "Password1234",
         },
     })
 
-    const onSubmit = (data: LoginFormValues) => {
-        setIsLoading(true)
-        console.log(data)
-        setTimeout(() => setIsLoading(false), 1000)
+    const onSubmit = async (userData: LoginFormValues) => {
+        try {
+            setIsLoading(true)
+            const { data, error } = await signIn.email({ email: userData.email, password: userData.password, callbackURL: "/" })
+            if (error) {
+                toast.error(error.message)
+            } else {
+                console.log(data, "data")
+                toast.success("Login successful")
+            }
+        } catch (error) {
+            console.log(error)
+            toast.error("Login failed")
+        } finally {
+            setIsLoading(false)
+        }
     }
 
     return (

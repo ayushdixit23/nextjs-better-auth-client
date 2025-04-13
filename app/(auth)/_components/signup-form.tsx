@@ -11,6 +11,8 @@ import { z } from 'zod'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Button } from '@/components/ui/button'
+import { signUp } from '@/auth-client'
+import { toast } from 'react-toastify'
 
 
 // Zod schema for form validation
@@ -41,24 +43,41 @@ const SignUpForm = () => {
     const form = useForm<SignUpFormValues>({
         resolver: zodResolver(signupSchema),
         defaultValues: {
-            name: "",
-            username: "",
-            email: "",
-            password: "",
+            name: "Ayush Dixit",
+            username: "ayushdixit23",
+            email: "fsayush100@gmail.com",
+            password: "Password1234",
             image: null,
         },
     });
 
-
     // Handle form submission
-    const onSubmit = async (data: SignUpFormValues) => {
-        setIsLoading(true);
-        console.log('Signup data:', data);
+    const onSubmit = async (signupData: SignUpFormValues) => {
+        try {
+            setIsLoading(true)
 
-        // Simulate API call
-        setTimeout(() => {
-            setIsLoading(false);
-        }, 1500);
+            const { email, password, name, image } = signupData
+
+            const { data, error } = await signUp.email({
+                email,
+                password,
+                name,
+                image,
+            });
+
+            if (error) {
+                toast.error(error.message)
+            } else {
+                console.log(data, "data")
+                toast.success("Signup successful")
+            }
+
+        } catch (error) {
+            console.log(error)
+            toast.error("Login failed")
+        } finally {
+            setIsLoading(false)
+        }
     };
 
     // Handle image upload and preview
@@ -75,10 +94,6 @@ const SignUpForm = () => {
             };
             reader.readAsDataURL(file);
         }
-    };
-
-    const handleOAuthSignup = (provider: string) => {
-        console.log(`Signup with ${provider}`);
     };
 
     // Animation variants
