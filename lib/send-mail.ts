@@ -32,7 +32,6 @@ export async function sendMail({
     console.error('SMTP Verification Failed:', error);
     return;
   }
-
   try {
     const info = await transporter.sendMail({
       from: SMTP_SERVER_USERNAME, 
@@ -41,7 +40,6 @@ export async function sendMail({
       text,
       html: html || '',
     });
-    console.log('Message Sent:', info.messageId);
     return info;
   } catch (error) {
     console.error('Email sending failed:', error);

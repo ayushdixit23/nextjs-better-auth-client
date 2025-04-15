@@ -39,24 +39,38 @@ const auth = betterAuth({
         minPasswordLength: 8,
         maxPasswordLength: 128,
         autoSignIn: true,
-        sendResetPassword: async ({user, url, token}, request) => {
+        sendResetPassword: async ({ user, url, token }, request) => {
             await sendMail({
-              sendTo: user.email,
-              subject: "Reset your password",
-              text: `Click the link to reset your password: ${url}`,
+                sendTo: user.email,
+                subject: "Reset your password",
+                text: `Click the link to reset your password: ${url}`,
             });
-          },
+        },
     },
     socialProviders: {
         github: {
             clientId: process.env.GITHUB_CLIENT_ID as string,
             clientSecret: process.env.GITHUB_CLIENT_SECRET as string,
+            mapProfileToUser: (profile) => ({
+                username: profile.login
+            }),
         },
         google: {
             clientId: process.env.GOOGLE_CLIENT_ID as string,
             clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
+            mapProfileToUser: (profile) => ({
+                username: `${profile.given_name.toLowerCase()}${profile.family_name.toLowerCase()}${Math.floor(100 + Math.random() * 900)}`
+            }),
         }
+
+    },
+    session: {
+        cookieCache: {
+            enabled: true,
+            maxAge: 5 * 60,
+        },
     },
 })
 
+export type User = typeof auth.$Infer.Session.user
 export default auth;

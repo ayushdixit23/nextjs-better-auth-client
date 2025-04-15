@@ -18,7 +18,11 @@ const SocialProviders = () => {
             } else {
                 setGithubLoading(true)
             }
-            const { error } = await signIn.social({ provider, callbackURL: DEFAULT_REDIRECT_PATH })
+            const { error } = await signIn.social({ provider, callbackURL: DEFAULT_REDIRECT_PATH }, {
+                body: {
+                    username: "testusername"
+                }
+            })
             if (error) {
                 toast.error(error.message)
             } else {
