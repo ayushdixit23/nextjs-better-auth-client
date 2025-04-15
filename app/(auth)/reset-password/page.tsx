@@ -1,5 +1,5 @@
 'use client'
-import { useState, FormEvent, useEffect } from 'react';
+import { useState, FormEvent, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { toast } from 'react-toastify';
@@ -10,7 +10,7 @@ interface PasswordState {
     confirmPassword: string;
 }
 
-export default function ResetPassword() {
+function ResetPassword() {
     const router = useRouter();
     const searchParams = useSearchParams();
     const token = searchParams.get('token');
@@ -82,19 +82,19 @@ export default function ResetPassword() {
 
     useEffect(() => {
         if (!token) {
-          toast.error('Token is missing or invalid');
-          setTimeout(() => {
-            router.push('/login');
-          }, 3000);
+            toast.error('Token is missing or invalid');
+            setTimeout(() => {
+                router.push('/login');
+            }, 3000);
         }
-    
+
         if (error === 'invalid_token') {
-          toast.error('Token is invalid or expired');
-          setTimeout(() => {
-            router.push('/login');
-          }, 3000);
+            toast.error('Token is invalid or expired');
+            setTimeout(() => {
+                router.push('/login');
+            }, 3000);
         }
-      }, [token, error, router]);
+    }, [token, error, router]);
 
     return (
         <>
@@ -170,4 +170,12 @@ export default function ResetPassword() {
             </div>
         </>
     );
+}
+
+export default async function ResetPasswordPage() {
+    return <>
+        <Suspense fallback={<div className='flex items-center justify-center w-full h-screen'>Loading...</div>}>
+            <ResetPassword />
+        </Suspense>
+    </>
 }
