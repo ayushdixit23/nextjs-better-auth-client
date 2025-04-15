@@ -51,25 +51,29 @@ const SignUpForm = () => {
         },
     });
 
-    // Handle form submission
     const onSubmit = async (signupData: SignUpFormValues) => {
         try {
             setIsLoading(true)
 
-            const { email, password, name, image } = signupData
+            const { email, password, name, image, username } = signupData
 
             const { data, error } = await signUp.email({
                 email,
                 password,
                 name,
                 image,
+
+            }, {
+                body: {
+                    username
+                }
             });
 
             if (error) {
                 toast.error(error.message)
             } else {
                 console.log(data, "data")
-                toast.success("Signup successful")
+                toast.success("Account created successfully, please verify your email to login")
             }
 
         } catch (error) {
