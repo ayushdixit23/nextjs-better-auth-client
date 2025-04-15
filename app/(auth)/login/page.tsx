@@ -8,9 +8,6 @@ import LoginForm from "../_components/login-form"
 export default function LoginPage() {
     return (
         <div className="min-h-screen flex items-center justify-center bg-gray-100 p-6">
-            {/* Blobs */}
-
-
             {/* Main Card */}
             <motion.div
                 initial={{ opacity: 0, y: -20 }}

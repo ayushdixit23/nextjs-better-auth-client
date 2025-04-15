@@ -39,6 +39,13 @@ const auth = betterAuth({
         minPasswordLength: 8,
         maxPasswordLength: 128,
         autoSignIn: true,
+        sendResetPassword: async ({user, url, token}, request) => {
+            await sendMail({
+              sendTo: user.email,
+              subject: "Reset your password",
+              text: `Click the link to reset your password: ${url}`,
+            });
+          },
     },
     socialProviders: {
         github: {

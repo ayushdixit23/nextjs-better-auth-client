@@ -11,6 +11,8 @@ import { FaLock } from 'react-icons/fa'
 import { z } from 'zod'
 import { signIn } from '@/auth-client'
 import { toast } from 'react-toastify'
+import Link from 'next/link'
+
 const loginSchema = z.object({
     email: z.string().email({ message: "Invalid email address" }),
     password: z.string().min(6, { message: "Password must be at least 6 characters" }),
@@ -108,9 +110,9 @@ const LoginForm = () => {
                         />
                         <span>Remember me</span>
                     </label>
-                    <a href="#" className="text-sm text-indigo-600 hover:underline">
+                    <Link href="/forgot-password" className="text-sm text-indigo-600 hover:underline">
                         Forgot password?
-                    </a>
+                    </Link>
                 </div>
 
                 <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
